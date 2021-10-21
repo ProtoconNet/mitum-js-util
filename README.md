@@ -23,6 +23,65 @@ $ npm install mitumc
 added 74 packages, and audited 75 packages in 23s
 ```
 
+## Generate New Keypairs
+
+'mitumc' supports to generate btc, ether, stellar keypairs for mitum-currency.
+
+### Methods 
+
+There are two methods to generate keypairs. getKeypair and toKeypair.
+
+```js
+getKeypair('btc') // generate btc keypair
+getKeypair('ether') // generate ether keypair
+gerKeypair('stellar') // generate stellar keypair
+
+// generate keypair from hinted key; hint example: btc-priv-v0.0.1, ether-priv-v0.0.1, stellar-priv-v0.0.1
+// version of hint (for example, v0.0.1) is up to mitum or mitum-currency
+toKeypair($hintedKey, '')
+
+// generate keypair from raw key(key without hint)
+toKeypair($rawKey, 'btc')
+toKeypair($rawKey, 'ether')
+toKeypair($rawKey, 'stellar')
+```
+
+#### Usage
+
+```js
+import mitumc from 'mitumc';
+
+const btckp = mitumc.getKeypair('btc'); // returns BTCKeyPair
+const ethkp = mitumc.getKeypair('ether'); // returns ETHKeyPair
+const stlkp = mitumc.getKeypair('stellar'); // returns StellarKeyPair
+
+btckp.getPrivateKey(); // 'KxZSDTbRvDCYtfaDcPcf2e97YuGPUA1Ag169WEa9TT5L9zvGUb2n:btc-priv-v0.0.1'
+btckp.getPublicKey(); // '29TcoNh2yFmrZm5V8x5JL5f7wKvFs5mgxSZqTPAVpvksN:btc-pub-v0.0.1'
+
+ethkp.getPrivateKey(); // '609b6a6f4e1d276affceb7a958c9c97c65fbe9aad179471db3eb7165b5bf3ee9:ether-priv-v0.0.1'
+ethkp.getPublicKey(); // '047b83ef60db6236413d12e09c5bb6d652beee9e3777ca17fa7b19a3dca1e3cc3989389f98762b9b3530c63d6d2809ef3d3188777844ebbf71ed3251fa83a9c905:ether-pub-v0.0.1'
+
+stlkp.getPrivateKey(); // 'SCJXZLP3DF64BHYW7WDKUVEBSJKLWB4SQ7Z7GIRYKDX56HADHMCCBISZ:stellar-priv-v0.0.1'
+stlkp.getPublicKey(); // 'GBQ5GDMNMB6LXIM5VT2BKTNL7WPYGZXX2R2ULLLNKFXMPGHMHZSSWYYR:stellar-pub-v0.0.1'
+```
+
+Note that 'mitumc.getKeypair()' and 'mitumc.toKeypair()' provides compressed btc key - aka compressed wif.
+
+Of course, you can get any keypair with your known private key by using 'toKeypair'.
+
+Note that it works with either hintless or hinted keys to generate keypairs. (key-hint ex. btc-priv, ether-pub, etc...) 
+
+```js
+import mitumc from 'mitumc';
+
+// both work same
+const btckp = mitumc.toKeypair("L2ddEkdgYVBkhtdN8HVXLZk5eAcdqXxecd17FDTobVeFfZNPk2ZD:btc-priv-v0.0.1", '');
+const btckp2 = mitumc.toKeypair("L2ddEkdgYVBkhtdN8HVXLZk5eAcdqXxecd17FDTobVeFfZNPk2ZD", 'btc'); // returns BTCKeyPair
+
+const ethkp = mitumc.toKeypair("013e56aca7cf88d95aa6535fb6c66f366d449a0380128e0eb656a863b45a5ad5:ether-priv-v0.0.1", ''); // returns ETHKeyPair
+const stlkp = mitumc.toKeypair("SBZV72AJVXGARRY6BYXF5IPNQYWMGZJ5YVF6NIENEEATETDF6LGH4CLL:stellar-priv-v0.0.1", ''); // returns StellarKeyPair
+```
+
 ## Generate New Operation
 
 ### Operations
@@ -66,30 +125,30 @@ Notice that the package name of 'mitum-js-util' is 'mitumc' for js codes.
 Modules that 'Generator' supports are,
 
 ```js
->>> Generator.setNetworkID(netID)
->>> Generator.formatKey(key, weight)
->>> Generator.formatAmount(big, cid)
->>> Generator.createKeys(keys, threshold)
->>> Generator.createAmounts(amounts) 
->>> Generator.createCreateAccountsItem(keys_o, amounts)
->>> Generator.createTransfersItem(receiver, amounts)
->>> Generator.createCreateDocumentsItem(fileHash, did, signcode, title, size, cid, signers, signcodes)
->>> Generator.createSignDocumentsItem(owner, did, cid)
->>> Generator.createTransferDocumentsItem(owner, receiver, did, cid)
->>> Generator.createCreateAccountsFact(sender, items)
->>> Generator.createKeyUpdaterFact(target, cid, keys_o)
->>> Generator.createTransfersFact(sender, items)
->>> Generator.createBlockSignFact(factType, sender, items)
->>> Generator.createOperation(fact, memo)
->>> Generator.createSeal(signKey, operations)
+Generator.setNetworkID(netID)
+Generator.formatKey(key, weight)
+Generator.formatAmount(big, cid)
+Generator.createKeys(keys, threshold)
+Generator.createAmounts(amounts) 
+Generator.createCreateAccountsItem(keys_o, amounts)
+Generator.createTransfersItem(receiver, amounts)
+Generator.createCreateDocumentsItem(fileHash, did, signcode, title, size, cid, signers, signcodes)
+Generator.createSignDocumentsItem(owner, did, cid)
+Generator.createTransferDocumentsItem(owner, receiver, did, cid)
+Generator.createCreateAccountsFact(sender, items)
+Generator.createKeyUpdaterFact(target, cid, keys_o)
+Generator.createTransfersFact(sender, items)
+Generator.createBlockSignFact(factType, sender, items)
+Generator.createOperation(fact, memo)
+Generator.createSeal(signKey, operations)
 
->>> Generator.id
+Generator.id
 netID
 ```
 
 You can check use-cases of Generator in the next part.
 
-__! If you want to get keypair for mitumc, go 'Generate Keypair' first. !__
+__! If you want to get keypair for mitumc, go 'Generate New Keypairs' first. !__
 
 ### Generate Create-Accounts 
 
@@ -102,34 +161,34 @@ When you use 'Generator', you must set 'network id' before you create something.
 #### Usage
 
 ```js
->>> import mitumc from 'mitumc';
+import mitumc from 'mitumc';
 
 /* const generator = new mitumc.Generator({networkId});
  * const generator = new mitumc.Generator(//anything//); generator.setNetworkId();
  */
->>> const generator = new mitumc.Generator('mitum'); 
+const generator = new mitumc.Generator('mitum'); 
 
->>> const sourcePriv = "SAZ4AMZV62FTWULIYLAH2PLR6LY7JVWAI4SOIFRHQLMNQ2W4NKMWDPL3:stellar-priv-v0.0.1"; // sender's private key
->>> const sourceAddr = "6d1pvkKLurRPovsKuQ6X75r7gX5GYHzrWpzpgyyYe6xi:mca-v0.0.1";                      // sender's account address
->>> const targetPub = "caRF1K6yCpaBh25hCS3czckjTjaRBpjvVsZn3qKWGzPC:btc-pub-v0.0.1";                   // public key of the account to newly create
+const sourcePriv = "SAZ4AMZV62FTWULIYLAH2PLR6LY7JVWAI4SOIFRHQLMNQ2W4NKMWDPL3:stellar-priv-v0.0.1"; // sender's private key
+const sourceAddr = "6d1pvkKLurRPovsKuQ6X75r7gX5GYHzrWpzpgyyYe6xi:mca-v0.0.1";                      // sender's account address
+const targetPub = "caRF1K6yCpaBh25hCS3czckjTjaRBpjvVsZn3qKWGzPC:btc-pub-v0.0.1";                   // public key of the account to newly create
 
->>> const key = generator.formatKey(targetPub, 100);
->>> const keys = generator.createKeys([key], 100);
+const key = generator.formatKey(targetPub, 100);
+const keys = generator.createKeys([key], 100);
 
 /* If you want to get address of keys, use 'Keys.address'.
  * 
- * >>> keys = generator.createKeys([key], 100);
- * >>> keys.address;
+ * keys = generator.createKeys([key], 100);
+ * keys.address;
  */
 
->>> const amount = generator.formatAmount(100, "MCC");
->>> const amounts = generator.createAmounts([amount]);
+const amount = generator.formatAmount(100, "MCC");
+const amounts = generator.createAmounts([amount]);
 
->>> const createAccountsItem = generator.createCreateAccountsItem(keys, amounts);
->>> const createAccountsFact = generator.createCreateAccountsFact(sourceAddr, [createAccountsItem]);
->>> const createAccounts = generator.createOperation(createAccountsFact, "");
+const createAccountsItem = generator.createCreateAccountsItem(keys, amounts);
+const createAccountsFact = generator.createCreateAccountsFact(sourceAddr, [createAccountsItem]);
+const createAccounts = generator.createOperation(createAccountsFact, "");
 
->>> createAccounts.addSign(sourcePriv);
+createAccounts.addSign(sourcePriv);
 ```
 
 You must add new fact signature by addSign before creating seal or json files from an operation.
@@ -137,7 +196,7 @@ You must add new fact signature by addSign before creating seal or json files fr
 Then Operation.dict() methods work correctly.
 
 ```js
->>> createAccounts.dict();
+createAccounts.dict();
 {
   memo: '',
   _hint: 'mitum-currency-create-accounts-operation-v0.0.1',
@@ -167,21 +226,21 @@ Key-Updater literally supports to update source public key to something else.
 #### Usage
 
 ```js
->>> import mitumc from 'mitumc';
+import mitumc from 'mitumc';
 
->>> const generator = new mitumc.Generator('mitum'); // new mitumc.Generator({networkId})
+const generator = new mitumc.Generator('mitum'); // new mitumc.Generator({networkId})
 
->>> const sourcePriv = "SAZ4AMZV62FTWULIYLAH2PLR6LY7JVWAI4SOIFRHQLMNQ2W4NKMWDPL3:stellar-priv-v0.0.1";
->>> const toPub = "0422a860ed96a917c41d95b50d61e0d34fb0f7aa1f0b47dca5dc2ad9b7514497aa94ad8e62f3b1a9e877fee95075b7003f8c432b37eb90f2f01ed1cee4f31879ae:ether-pub-v0.0.1";
->>> const fromAddr = "G6mRkczkChCfGEV9qT8h9V3TeUdagxSpbN4KMuC2LtoV:mca-v0.0.1";
+const sourcePriv = "SAZ4AMZV62FTWULIYLAH2PLR6LY7JVWAI4SOIFRHQLMNQ2W4NKMWDPL3:stellar-priv-v0.0.1";
+const toPub = "0422a860ed96a917c41d95b50d61e0d34fb0f7aa1f0b47dca5dc2ad9b7514497aa94ad8e62f3b1a9e877fee95075b7003f8c432b37eb90f2f01ed1cee4f31879ae:ether-pub-v0.0.1";
+const fromAddr = "G6mRkczkChCfGEV9qT8h9V3TeUdagxSpbN4KMuC2LtoV:mca-v0.0.1";
 
->>> const key = generator.formatKey(toPub, 100);
->>> const keys = generator.createKeys([key], 100);
+const key = generator.formatKey(toPub, 100);
+const keys = generator.createKeys([key], 100);
 
->>> const keyUpdaterFact = generator.createKeyUpdaterFact(fromAddr, "MCC", keys);
->>> const keyUpdater = generator.createOperation(keyUpdaterFact, "");
+const keyUpdaterFact = generator.createKeyUpdaterFact(fromAddr, "MCC", keys);
+const keyUpdater = generator.createOperation(keyUpdaterFact, "");
 
->>> keyUpdater.addSign(source_priv);
+keyUpdater.addSign(source_priv);
 ```
 
 ### Generate Transfers
@@ -191,21 +250,21 @@ To generate an operation, you must prepare target address, not public key. Trans
 #### Usage
 
 ```js
->>> import mitumc from 'mitumc';
+import mitumc from 'mitumc';
 
->>> const generator = new mitumc.Generator('mitum'); // new mitumc.Generator({networkId})
+const generator = new mitumc.Generator('mitum'); // new mitumc.Generator({networkId})
 
->>> const sourcePriv = "L4qMcVKwQkqrnPPtEhj8idCQyvCN2zyG374i5oftGQfraJEP8iek:btc-priv-v0.0.1";
->>> const targetAddr = "GYJMxzXsgUbhayJvG34HAVT6288EYEkUxdyghDhjibtv:mca-v0.0.1";
+const sourcePriv = "L4qMcVKwQkqrnPPtEhj8idCQyvCN2zyG374i5oftGQfraJEP8iek:btc-priv-v0.0.1";
+const targetAddr = "GYJMxzXsgUbhayJvG34HAVT6288EYEkUxdyghDhjibtv:mca-v0.0.1";
 
->>> const amount = generator.formatAmount(100, "MCC");
->>> const amounts = generator.createAmounts([amount]);
+const amount = generator.formatAmount(100, "MCC");
+const amounts = generator.createAmounts([amount]);
 
->>> const transfersItem = generator.createTransfersItem(targetAddr, amounts);
->>> const transfersFact = generator.createTransfersFact(sourceAddr, [transfersItem]);
->>> const transfers = generator.createOperation(transfersFact, "");
+const transfersItem = generator.createTransfersItem(targetAddr, amounts);
+const transfersFact = generator.createTransfersFact(sourceAddr, [transfersItem]);
+const transfers = generator.createOperation(transfersFact, "");
 
->>> transfers.addSign(source_priv);
+transfers.addSign(source_priv);
 ```
 
 ### Generate Create-Documents
@@ -215,21 +274,21 @@ To generate an operation, you must prepare file-hash. Create-Document supports t
 #### Usage
 
 ```js
->>> import mitumc from 'mitumc';
+import mitumc from 'mitumc';
 
->>> const generator = new mitumc.Generator('mitum'); // new mitumc.Generator({networkId})
+const generator = new mitumc.Generator('mitum'); // new mitumc.Generator({networkId})
 
->>> const sourcePriv = "SAZ4AMZV62FTWULIYLAH2PLR6LY7JVWAI4SOIFRHQLMNQ2W4NKMWDPL3:stellar-priv-v0.0.1";
->>> const sourceAddr = "6d1pvkKLurRPovsKuQ6X75r7gX5GYHzrWpzpgyyYe6xi:mca-v0.0.1";
->>> const signer = "3GFpucWfTjHFaseG4X6X83qEugtci7bzyxcE1xgRUqpQ:mca-v0.0.1";
+const sourcePriv = "SAZ4AMZV62FTWULIYLAH2PLR6LY7JVWAI4SOIFRHQLMNQ2W4NKMWDPL3:stellar-priv-v0.0.1";
+const sourceAddr = "6d1pvkKLurRPovsKuQ6X75r7gX5GYHzrWpzpgyyYe6xi:mca-v0.0.1";
+const signer = "3GFpucWfTjHFaseG4X6X83qEugtci7bzyxcE1xgRUqpQ:mca-v0.0.1";
 
->>> const createDocumentsItem = generator.createCreateDocumentsItem("abcdabc:mbfh-v0.0.1", 150, "user01", "title150", 1234, "MCC", [signer], ["user02"]);
+const createDocumentsItem = generator.createCreateDocumentsItem("abcdabc:mbfh-v0.0.1", 150, "user01", "title150", 1234, "MCC", [signer], ["user02"]);
 
->>> const createDocumentsFact = generator.createBlockSignFact(generator.BLOCKSIGN_CREATE_DOCUMENTS, sourceAddr, [createDocumentsItem])
+const createDocumentsFact = generator.createBlockSignFact(generator.BLOCKSIGN_CREATE_DOCUMENTS, sourceAddr, [createDocumentsItem])
 
->>> const createDocuments = generator.createOperation(createDocumentsFact, "");
+const createDocuments = generator.createOperation(createDocumentsFact, "");
 
->>> createDocuments.addSign(sourcePriv);
+createDocuments.addSign(sourcePriv);
 ```
 
 ### Generate Sign-Documents
@@ -239,22 +298,22 @@ To generate an operation, you must prepare owner and document id. Sign-Document 
 #### Usage
 
 ```js
->>> import mitumc from 'mitumc';
+import mitumc from 'mitumc';
 
->>> const generator = new mitumc.Generator('mitum'); // new mitumc.Generator({networkId})
+const generator = new mitumc.Generator('mitum'); // new mitumc.Generator({networkId})
 
->>> const owner = "6d1pvkKLurRPovsKuQ6X75r7gX5GYHzrWpzpgyyYe6xi:mca-v0.0.1";
+const owner = "6d1pvkKLurRPovsKuQ6X75r7gX5GYHzrWpzpgyyYe6xi:mca-v0.0.1";
 
->>> const senderPriv = "SDASY3GHXQUUJGPVMGB6PVPJYQZA5VGNY7PKG3O3OIVJ5AOTGR7CDWCS:stellar-priv-v0.0.1";
->>> const senderAddr = "3GFpucWfTjHFaseG4X6X83qEugtci7bzyxcE1xgRUqpQ:mca-v0.0.1";
+const senderPriv = "SDASY3GHXQUUJGPVMGB6PVPJYQZA5VGNY7PKG3O3OIVJ5AOTGR7CDWCS:stellar-priv-v0.0.1";
+const senderAddr = "3GFpucWfTjHFaseG4X6X83qEugtci7bzyxcE1xgRUqpQ:mca-v0.0.1";
 
->>> const signDocumentsItem = generator.createSignDocumentsItem(owner, 1, "MCC");
+const signDocumentsItem = generator.createSignDocumentsItem(owner, 1, "MCC");
 
->>> const signDocumentsFact = generator.createBlockSignFact(generator.BLOCKSIGN_SIGN_DOCUMENTS, senderAddr, [signDocumentsItem]);
+const signDocumentsFact = generator.createBlockSignFact(generator.BLOCKSIGN_SIGN_DOCUMENTS, senderAddr, [signDocumentsItem]);
 
->>> const SignDocuments = generator.createOperation(signDocumentsFact, "");
+const SignDocuments = generator.createOperation(signDocumentsFact, "");
 
->>> SignDocuments.addSign(senderPriv);
+SignDocuments.addSign(senderPriv);
 ```
 
 ### ~~Generate Transfer-Documents~~
@@ -266,21 +325,21 @@ To generate an operation, you must prepare owner and document id. Sign-Document 
 #### Usage
 
 ```js
->>> import mitumc from 'mitumc';
+import mitumc from 'mitumc';
 
->>> const generator = new mitumc.Generator('mitum'); // new mitumc.Generator({networkId})
+const generator = new mitumc.Generator('mitum'); // new mitumc.Generator({networkId})
 
->>> const sourcePriv = "SAZ4AMZV62FTWULIYLAH2PLR6LY7JVWAI4SOIFRHQLMNQ2W4NKMWDPL3:stellar-priv-v0.0.1";
->>> const sourceAddr = "6d1pvkKLurRPovsKuQ6X75r7gX5GYHzrWpzpgyyYe6xi:mca-v0.0.1";
->>> const targetAddr = "3GFpucWfTjHFaseG4X6X83qEugtci7bzyxcE1xgRUqpQ:mca-v0.0.1";
+const sourcePriv = "SAZ4AMZV62FTWULIYLAH2PLR6LY7JVWAI4SOIFRHQLMNQ2W4NKMWDPL3:stellar-priv-v0.0.1";
+const sourceAddr = "6d1pvkKLurRPovsKuQ6X75r7gX5GYHzrWpzpgyyYe6xi:mca-v0.0.1";
+const targetAddr = "3GFpucWfTjHFaseG4X6X83qEugtci7bzyxcE1xgRUqpQ:mca-v0.0.1";
 
->>> const transferDocumentsItem = generator.createTransferDocumentsItem(sourceAddr, targetAddr, 1, "MCC");
+const transferDocumentsItem = generator.createTransferDocumentsItem(sourceAddr, targetAddr, 1, "MCC");
 
->>> const transferDocumentsFact = generator.createBlockSignFact(generator.BLOCKSIGN_TRANSFER_DOCUMENTS, sourceAddr, [transferDocumentsItem]);
+const transferDocumentsFact = generator.createBlockSignFact(generator.BLOCKSIGN_TRANSFER_DOCUMENTS, sourceAddr, [transferDocumentsItem]);
 
->>> const transferDocuments = generator.createOperation(transferDocumentsFact, "");
+const transferDocuments = generator.createOperation(transferDocumentsFact, "");
 
->>> transferDocuments.addSign(sourcePriv);
+transferDocuments.addSign(sourcePriv);
 ```
 
 ## Generate New Seal
@@ -303,8 +362,8 @@ You can create a json file from generated seal object without 'JSONParser' class
 Modules that 'JSONParser' supports are,
 
 ```js
->>> JSONParser.toJSONString(seal)
->>> JSONParser.generateFile(seal, fName)
+JSONParser.toJSONString(seal)
+JSONParser.generateFile(seal, fName)
 ```
 
 A use-case of 'JSONParser' will be introduced in the next part.
@@ -316,23 +375,23 @@ First of all, suppose that every operation is that generated by 'Generator'. (cr
 ### Example
 
 ```js
->>> import mitumc from 'mitumc';
+import mitumc from 'mitumc';
 
->>> const generator = new mitumc.Generator('mitum'); // new mitumc.Generator({networkId})
->>> const parser = mitumc.JSONParser;
+const generator = new mitumc.Generator('mitum'); // new mitumc.Generator({networkId})
+const parser = mitumc.JSONParser;
 
 // ... omitted
 // Create each operation [createAccounts, keyUpdater, transfers] with generator.
 // See above sections.
 // ...
 
->>> const signer = "SAZ4AMZV62FTWULIYLAH2PLR6LY7JVWAI4SOIFRHQLMNQ2W4NKMWDPL3:stellar-priv-v0.0.1";
+const signer = "SAZ4AMZV62FTWULIYLAH2PLR6LY7JVWAI4SOIFRHQLMNQ2W4NKMWDPL3:stellar-priv-v0.0.1";
 
->>> const operations = [createAccounts];
->>> const seal = generator.createSeal(signer, operations);
+const operations = [createAccounts];
+const seal = generator.createSeal(signer, operations);
 
->>> parser.toJSONString(seal);
->>> parser.generateFile(seal, 'seal.json');
+parser.toJSONString(seal);
+parser.generateFile(seal, 'seal.json');
 ```
 
 Then the result format of generateFile() will be like [this](example/seal.json). (Each value is up to input arguments and time)
@@ -361,51 +420,6 @@ Sign message with btc, ether, stellar keypair.
 
 ### Usage
 
-#### Generate Keypair
-
-```js
->>> import mitumc from 'mitumc';
-
->>> const btckp = mitumc.getKeypair('btc'); // returns BTCKeyPair
->>> const ethkp = mitumc.getKeypair('ether'); // returns ETHKeyPair
->>> const stlkp = mitumc.getKeypair('stellar'); // returns StellarKeyPair
-
->>> btckp.getPrivateKey();
-'KxZSDTbRvDCYtfaDcPcf2e97YuGPUA1Ag169WEa9TT5L9zvGUb2n:btc-priv-v0.0.1'
-
->>> btckp.getPublicKey();
-'29TcoNh2yFmrZm5V8x5JL5f7wKvFs5mgxSZqTPAVpvksN:btc-pub-v0.0.1'
-
->>> ethkp.getPrivateKey();
-'609b6a6f4e1d276affceb7a958c9c97c65fbe9aad179471db3eb7165b5bf3ee9:ether-priv-v0.0.1'
-
->>> ethkp.getPublicKey();
-'047b83ef60db6236413d12e09c5bb6d652beee9e3777ca17fa7b19a3dca1e3cc3989389f98762b9b3530c63d6d2809ef3d3188777844ebbf71ed3251fa83a9c905:ether-pub-v0.0.1'
-
->>> stlkp.getPrivateKey();
-'SCJXZLP3DF64BHYW7WDKUVEBSJKLWB4SQ7Z7GIRYKDX56HADHMCCBISZ:stellar-priv-v0.0.1'
-
->>> stlkp.getPublicKey();
-'GBQ5GDMNMB6LXIM5VT2BKTNL7WPYGZXX2R2ULLLNKFXMPGHMHZSSWYYR:stellar-pub-v0.0.1'
-```
-
-Note that 'mitumc.getKeypair()' and 'mitumc.toKeypair()' provides compressed btc key - aka compressed wif.
-
-Of course, you can get any keypair with your known private key by using 'toKeypair'.
-
-Note that it works with either hintless or hinted keys to generate keypairs. (key-hint ex. btc-priv, ether-pub, etc...) 
-
-```js
->>> import mitumc from 'mitumc';
-
-// both work same
->>> const btckp = mitumc.toKeypair("L2ddEkdgYVBkhtdN8HVXLZk5eAcdqXxecd17FDTobVeFfZNPk2ZD:btc-priv-v0.0.1", '');
->>> const btckp2 = mitumc.toKeypair("L2ddEkdgYVBkhtdN8HVXLZk5eAcdqXxecd17FDTobVeFfZNPk2ZD", 'btc'); // returns BTCKeyPair
-
->>> const ethkp = mitumc.toKeypair("013e56aca7cf88d95aa6535fb6c66f366d449a0380128e0eb656a863b45a5ad5:ether-priv-v0.0.1", ''); // returns ETHKeyPair
->>> const stlkp = mitumc.toKeypair("SBZV72AJVXGARRY6BYXF5IPNQYWMGZJ5YVF6NIENEEATETDF6LGH4CLL:stellar-priv-v0.0.1", ''); // returns StellarKeyPair
-```
-
 #### Sign Message
 
 Each keypair supports 'sign' method that generates Buffer format signature by signing Buffer format message.
@@ -413,19 +427,15 @@ Each keypair supports 'sign' method that generates Buffer format signature by si
 If you want to get signature for 'mitum-currency', use 'bs58' to encode the signature.
 
 ```js
->>> import mitumc from 'mitumc';
->>> import bs58 from 'bs58';
+import mitumc from 'mitumc';
+import bs58 from 'bs58';
 
->>> const msg = Buffer.from('mitum');
+const msg = Buffer.from('mitum');
 
->>> const btckp = mitumc.getKeypair('btc');
->>> const sign = btckp.sign(msg)
+const btckp = mitumc.getKeypair('btc');
+const sign = btckp.sign(msg) // <Buffer 30 45 02 21 00 9f 21 a9 5d 98 12 60 20 46 0d 0f 2f 48 ab 88 02 21 21 40 6c f2 24 01 32 87 24 3c 06 a2 a2 da 33 02 20 3b a1 43 c0 a0 c1 6b bf 02 c5 95 ... >
 
->>> sign
-<Buffer 30 45 02 21 00 9f 21 a9 5d 98 12 60 20 46 0d 0f 2f 48 ab 88 02 21 21 40 6c f2 24 01 32 87 24 3c 06 a2 a2 da 33 02 20 3b a1 43 c0 a0 c1 6b bf 02 c5 95 ... >
-
->>> bs58.encode(sign);
-'AN1rKvtAFuz64U5jEK6FRpxoiLCiGWAjoX3R6NYPQE3WJfpTj9ye9vAyAV3yaGSeangJE1GK8U2eNLSFo2siKq2Zc2CXXUiVE'
+bs58.encode(sign); // 'AN1rKvtAFuz64U5jEK6FRpxoiLCiGWAjoX3R6NYPQE3WJfpTj9ye9vAyAV3yaGSeangJE1GK8U2eNLSFo2siKq2Zc2CXXUiVE'
 ```
 
 Omit ether/stellar keypair sign. (bcz same...)
@@ -494,13 +504,13 @@ Use 'Signer.signOperation(#operation-file-path)' to add new fact signature to "f
 After adding a fact signature, operation hash is always changed.
 
 ```js
->>> import mitumc from 'mitumc';
+import mitumc from 'mitumc';
 
->>> const signer = new Signer('mitum', "L4qMcVKwQkqrnPPtEhj8idCQyvCN2zyG374i5oftGQfraJEP8iek:btc-priv-v0.0.1");
+const signer = new Signer('mitum', "L4qMcVKwQkqrnPPtEhj8idCQyvCN2zyG374i5oftGQfraJEP8iek:btc-priv-v0.0.1");
 
->>> /* Signer.signOperation(#target) */
->>> /* #target must be a dictionary style object or the path of opertaion json file */
->>> const newOperation = signer.signOperation('operation.json'); // or an object itself instead of the path 'operation.json'
+/* Signer.signOperation(#target) */
+/* #target must be a dictionary style object or the path of opertaion json file */
+const newOperation = signer.signOperation('operation.json'); // or an object itself instead of the path 'operation.json'
 ```
 
 After signing, above operation must be like below.(Each value is up to input arguments and time)
