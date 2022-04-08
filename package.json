@@ -5,7 +5,8 @@
   "description": "javascript sdk for mitum-currency and mitum-data-blocksign",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "preinstall": "npx npm-force-resolutions"
   },
   "repository": {
     "type": "git",
@@ -24,19 +25,17 @@
   "homepage": "https://github.com/ProtoconNet/mitum-js-util#readme",
   "dependencies": {
     "big-integer": "^1.6.51",
-    "bs58": "^4.0.1",
+    "bs58": "^5.0.0",
     "bs58check": "^2.1.2",
+    "crypto": "^1.0.1",
     "eccrypto-js": "^5.4.0",
     "elliptic": "^6.5.4",
     "int64-buffer": "^1.0.1",
     "js-sha3": "^0.8.0",
-    "secp256k1": "^4.0.3",
-    "url-parse": "^1.5.4"
-  },
-  "devDependencies": {
-    "axios": "0.23.0"
+    "secp256k1": "^4.0.3"
   },
   "resolutions": {
-    "axios": "^0.23.0"
+    "axios": "0.26.1",
+    "url-parse": "1.5.10"
   }
 }
