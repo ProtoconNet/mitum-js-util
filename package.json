@@ -30,6 +30,7 @@
     "crypto": "^1.0.1",
     "eccrypto-js": "^5.4.0",
     "elliptic": "^6.5.4",
+    "get-random-values": "^1.2.2",
     "int64-buffer": "^1.0.1",
     "js-sha3": "^0.8.0",
     "secp256k1": "^4.0.3"
